@@ -1,0 +1,97 @@
+{% load menu_tags %}
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+          .tree {
+              list-style-type: none;
+              padding-left: 0;
+            }
+
+            .tree-item {
+              margin-bottom: 5px;
+            }
+
+            .tree-item-label {
+              display: block;
+              cursor: pointer;
+              padding: 5px;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+            }
+
+            .tree-submenu {
+              list-style-type: none;
+              padding-left: 20px;
+            }
+
+            .tree-submenu-item {
+              margin-bottom: 3px;
+            }
+
+            .tree-submenu-item-label {
+              display: block;
+              cursor: pointer;
+              padding: 3px;
+              border: 1px solid #ddd;
+              border-radius: 3px;
+            }
+
+            .tree-item input[type="checkbox"],
+            .tree-submenu-item input[type="checkbox"] {
+              display: none;
+            }
+
+            .tree-item input[type="checkbox"] + .tree-item-label::before,
+            .tree-submenu-item input[type="checkbox"] + .tree-submenu-item-label::before {
+              content: "▶";
+              margin-right: 5px;
+            }
+
+            .tree-item input[type="checkbox"]:checked + .tree-item-label::before,
+            .tree-submenu-item input[type="checkbox"]:checked + .tree-submenu-item-label::before {
+              content: "▼";
+            }
+
+            .tree-item input[type="checkbox"]:checked + .tree-item-label + .tree-submenu,
+            .tree-submenu-item input[type="checkbox"]:checked + .tree-submenu-item-label + .tree-submenu {
+              display: block;
+            }
+
+      </style>
+   </head>
+<body>
+    {% draw_menu main_menu %}
+
+    <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const treeItems = document.querySelectorAll('.tree-item input[type="checkbox"]');
+
+  treeItems.forEach(function(item) {
+    item.addEventListener("change", function() {
+      const submenu = this.parentElement.querySelector('.tree-submenu');
+      toggleSubmenu(submenu, this.checked);
+    });
+
+    // Проверяем состояние чекбоксов при загрузке страницы
+    const submenu = item.parentElement.querySelector('.tree-submenu');
+    toggleSubmenu(submenu, item.checked);
+  });
+
+  // Функция для переключения видимости подменю
+  function toggleSubmenu(submenu, isVisible) {
+    if (submenu) {
+      if (isVisible) {
+        submenu.style.display = "block";
+      } else {
+        submenu.style.display = "none";
+      }
+    }
+  }
+});
+
+    </script>
+</body>
+</html>

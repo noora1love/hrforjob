@@ -1,0 +1,174 @@
+
+      <li>
+        <a href="#">
+          <span class="link_name">Dashboard</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Category</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <span class="link_name">Category</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Category</a></li>
+          <li><a href="#">HTML & CSS</a></li>
+          <li><a href="#">JavaScript</a></li>
+          <li><a href="#">PHP & MySQL</a></li>
+        </ul>
+      </li>
+      <li>
+        <div class="iocn-link">
+          <a href="#">
+            <i class='bx bx-book-alt' ></i>
+            <span class="link_name">Posts</span>
+          </a>
+          <i class='bx bxs-chevron-down arrow' ></i>
+        </div>
+        <ul class="sub-menu">
+          <li><a class="link_name" href="#">Posts</a></li>
+          <li><a href="#">Web Design</a></li>
+          <li><a href="#">Login Form</a></li>
+          <li><a href="#">Card Design</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <i class="bx bx-pie-chart-alt-2" ></i>
+          <span class="link_name">Analytics</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Analytics</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <i class='bx bx-line-chart' ></i>
+          <span class="link_name">Chart</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Chart</a></li>
+        </ul>
+      </li>
+
+      <li>
+        <a href="#">
+          <i class='bx bx-compass' ></i>
+          <span class="link_name">Explore</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Explore</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <i class='bx bx-history'></i>
+          <span class="link_name">History</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">History</a></li>
+        </ul>
+      </li>
+      <li>
+        <a href="#">
+          <i class='bx bx-cog' ></i>
+          <span class="link_name">Setting</span>
+        </a>
+        <ul class="sub-menu blank">
+          <li><a class="link_name" href="#">Setting</a></li>
+        </ul>
+      </li>
+      <li>
+    <div class="profile-details">
+      <div class="profile-content">
+        <!--<img src="image/profile.jpg" alt="profileImg">-->
+      </div>
+      <div class="name-job">
+        <div class="profile_name">Prem Shahi</div>
+        <div class="job">Web Desginer</div>
+      </div>
+      <i class='bx bx-log-out' ></i>
+    </div>
+  </li>
+
+<ul class="menu">
+    <li class="showMenu">
+        <div class="iocn-link">
+            <a href="#">
+                <i class="bx bx-pie-chart-alt-2"></i>
+                <span class="link_name">Admin Panel</span></a>
+            <i class="bx bxs-chevron-down arrow"></i>
+        </div>
+        <ul class="sub-menu">
+            <li>
+                <a href="Admin panel 1 part"><span class="link_name">Admin panel 1 part</span></a>
+            </li>
+        </ul>
+    </li>
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from django import template
+from django.utils.safestring import mark_safe
+
+register = template.Library()
+
+@register.simple_tag(takes_context=True)
+def draw_menu(context, menu_items):
+    menu_html = '<ul class="tree">'
+    for item in menu_items:
+        if item.parent is None:
+            menu_html += '<li class="section">'
+            menu_html += '<input type="checkbox" id="{}">'.format(item.id)
+            menu_html += '<a href="{}">'.format(item.url)
+            menu_html += '<label for="{}">{}</label>'.format(item.id, item.title)
+            menu_html += '</a>'
+            menu_html += draw_children(item, menu_items)
+            menu_html += '</li>'
+    menu_html += '</ul>'
+    return mark_safe(menu_html)
+
+
+def draw_children(parent, menu_items):
+    children_html = ''
+    children = [child for child in menu_items if child.parent == parent]
+    if children:
+        children_html = '<ul>'
+        for child in children:
+            children_html += '<li>'
+            children_html += '<a href="{}">'.format(child.url)
+            children_html += '{}'.format(child.title)
+            children_html += '</a>'
+            children_html += draw_children(child, menu_items)
+            children_html += '</li>'
+        children_html += '</ul>'
+    return children_html
